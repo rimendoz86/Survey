@@ -13,6 +13,11 @@ function Authentication() {
     this.Password = null;
 }
 
+function Page(id, onNavigate = () => {return}) {
+    this.ID = id;
+    this.OnNavigate = onNavigate;
+    this.DomRef = new DomRef(id);
+}
 
 function DomRef(id){
     this.nativeElementRef = document.getElementById(id);

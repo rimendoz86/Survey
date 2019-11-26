@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,9 +10,11 @@
     <script src="scripts/Model.js"></script>
     <script src="scripts/Controller.js"></script>
     <script src="scripts/View.js"></script>
+    <script src="scripts/Nav.js"></script>
     <script src="scripts/Binding.js"></script>
     <link rel="stylesheet" href="styles/style.css">
 </head>
+
 <body>
     <div class="container">
         <div class="row">
@@ -40,44 +43,12 @@
                 </nav>
             </div>
         </div>
-        <div class="row" id="orderPage">
-            <div class="col-62 overflow-auto">
-                <h3>Products</h3>
-                <table id="productsTable">
-                </table>
+        <div id="routeContainer">
+            <div id="homePage" class="row hide">
+                This is the home page
             </div>
-            <div class="col-37">
-                <div class="row">
-                    <div class="col overflow-auto">
-                        <h3>Shopping Cart</h3>
-                        <table id="shoppingCartTable">
-                        </table>
-                    </div>
-                </div>
-                <div id="orderButtonContainer" class="row hide">
-                    <div class="col">
-                        <span class='btn btn-light' onclick='GlobalControllerRef.EmptyCart()'>Empty Cart</span>
-                    </div>
-                </div>
-                <div id="orderFormContainer" class="row">
-                    <div class="col overflow-auto">
-                        <h3>Order Details</h3>
-                        <table id="pricingTable">
-                        </table>
-                        <form id="orderForm">
-                            <input type="text" name="Name" placeholder="Name" id="CustomerName">
-                            <input type="email" name="Email" placeHolder="Email" id="CustomerEmail">
-                            <textarea name="address" placeholder="Full Address" id="CustomerAddress" cols="1" rows="4"></textarea>
-                            <select name="shipping" placeholder="Shipping" id="orderShipping">
-                                <option value="0">No Rush (Free)</option>
-                                <option value="1">2-Day (5.99)</option>
-                                <option value="2">Overnight (10.99)</option>
-                            </select>
-                            <br>
-                            <input class="btn btn-primary float-right" type="submit" value="Order Now">
-                        </form>
-                    </div>
-                </div>
+            <div id="page2" class="row hide">
+                    This is page 2
             </div>
         </div>
         <div class="row footer">
@@ -90,5 +61,5 @@
     </div>
 </body>
 <script src="scripts/App.js"></script>
-</html>
 
+</html>
