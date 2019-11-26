@@ -1,0 +1,203 @@
+body, html{
+    margin: 0px; 
+    padding: 0px;
+    color: black;
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    background-color:#ffebd1
+}
+
+.container{
+    width: 100%;
+    max-width: 1280px;
+    margin: auto;
+    box-shadow: 0px 0px 5px black;
+    background-color: white;
+    min-height: auto;
+    position: relative;
+    padding-bottom: 50px;
+}
+
+.row{
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: 15px;
+    margin-right: 15px;
+    position: relative;
+}
+
+.col-100, .col-25, .col-37, .col-62 .col-50, .col-75, .col {
+    display: inline-block;
+    width: 100%;
+}
+
+.row.footer {
+    width: 100%;
+    padding: 10px 0px;
+    position: absolute;
+    bottom: 0px;
+    background-color: #ff3535;
+    color: white;
+    margin-left: 0px;
+    text-indent: 5px;
+    text-align: center;
+}
+
+.nav {
+    background-color: #ff3535;
+    padding: 5px 0px;
+    margin-left: -15px;
+    margin-right: -15px;
+    padding-right: 15px;
+    display: flex;
+}
+
+.nav a , .nav span {
+    text-decoration: none;
+    color: white;
+} 
+
+.nav ul{
+    list-style-type:none;
+}
+
+.nav ul.navSectionRight{
+    list-style-type:none;
+    margin-left: auto;
+}
+
+.nav-inline ul li{
+    padding: 5px;
+}
+
+.nav-inline ul li {
+    display: inline-block;
+}
+
+.siteTitle{
+    display: inline-flex;
+    justify-content: flex-start;
+    padding: 15px;
+}
+
+table{
+    width: 100%;
+    padding: 15px;
+    border-collapse: collapse;
+    box-shadow: 0px 0px 1px grey;
+}
+
+table img{
+    max-width: auto;
+    max-height: 70px;
+}
+
+table tr:nth-child(even) {
+    background: #f3f3f3;
+}
+
+table thead{
+    background: #f3f3f3;
+}
+
+table td, table th{
+    padding: 5px;
+    text-align: center;
+}
+
+#shoppingCartTable img{
+    max-width: 40px;
+    max-height: auto;
+}
+
+input, select, textarea {
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid lightGray;
+    padding: 10px;
+    margin: 5px 1px;
+    font-size: 16px;
+}
+
+.btn{
+    display: inline-block;
+    background-color: #5a6268;
+    color: white;
+    font-size: large;
+    padding: 10px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px;
+    font-weight: lighter;
+    border: 1px solid lightgray;
+    width: auto;
+    -webkit-user-select: none; 
+    -moz-user-select: none;
+    -khtml-user-select: none; 
+    -ms-user-select: none;
+    white-space: nowrap;
+}
+
+.btn.btn-primary{
+    background-color: #007bff;
+    color: white;
+}
+
+.btn.btn-light{
+    color: #212529;
+    background-color: #f8f9fa
+}
+
+
+.hide {
+    display:none !important;
+}
+
+.horizontalForm{
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+}
+
+.float-right{
+    float:right;
+}
+
+.overflow-auto{
+    overflow:auto;
+}
+
+@media only screen and (min-width: 768px) {
+    .col-100, .col{
+        width: 100%;
+    }
+    
+    .col-25{
+        width: 25%;
+    }
+    
+    .col-37{
+        width: 37.5%;
+    }
+    
+    .col-50{
+        width: 50%;
+    }
+    
+    .col-62{
+        width: 62.5%;
+    }
+    
+    .col-75{
+        width: 75%;
+    }
+
+    .btn{
+        padding: 5px 8px;
+        font-size: medium;
+    }
+    input, select, textarea {
+        padding: 5px;
+    }
+  }
