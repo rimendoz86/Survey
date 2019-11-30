@@ -1,8 +1,25 @@
 function viewClass() {
     window.GlobalViewRef = this;
-    this.ProductsTable = new DomRef('surveyTable');
+    this.SurveyTable = new DomRef('surveyTable');
     this.LoginForm = new DomRef('loginForm');
-    this.Welcome = new DomRef('welcome');
+    this.LoggedIn = new DomRef('loggedIn');
+    this.Pages = this.PageConfig();
+};
+
+viewClass.prototype.PageConfig = function(){
+    let pages = [];
+
+    let welcomePage = new DomRef('welcomePage');
+    pages.push(welcomePage);
+
+    let surveyPage = new DomRef('surveyPage');
+    surveyPage.OnShow = () => {
+        GlobalControllerRef.GetUserSurveys();
+    }
+    pages.push(surveyPage);
+
+    return pages;
+
 };
 
 viewClass.prototype.DisplaySurveys = function (surveys) {
@@ -11,13 +28,19 @@ viewClass.prototype.DisplaySurveys = function (surveys) {
     surveys.forEach(survey => {
         tableContent += `
         <tr>
+            <td>${survey.Login}</td>
             <td>${survey.Name}</td>
             <td>${survey.Description}</td>
-            <td>${survey.CreatedOn}</td>
             <td><span class="btn btn-primary">Start</span></td>
         </tr>
         `
     });
     tableContent += "</tbody>"
-    this.ProductsTable.SetInnerHTML(tableContent);
+    this.SurveyTable.SetInnerHTML(tableContent);
 }
+
+viewClass.prototype.ShowPage = function (pageID){
+    this.Pages.forEach((page) =>{
+        page.Show(page.ID == pageID);
+        });
+};

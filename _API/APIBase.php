@@ -56,6 +56,10 @@ class APIBase {
     function SendResponse($responseCode){
         http_response_code($responseCode);
         die(json_encode($this->Response));
+    }  
+    function AddValidationMessage($validationMessage){
+        if (empty($validationMessage)) return;
+        array_push($this->Response->ValidationMessages,$validationMessage);
     }
 }
 ?>

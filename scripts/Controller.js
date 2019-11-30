@@ -2,8 +2,6 @@ function controllerClass (){
     this.Model = new modelClass();
     window.GlobalControllerRef = this;
     this.LoginForm = new FormBinding(ModelRef.Authentication,'loginForm');
-    // this.Pages = this.PageConfig();
-    this.GetAllSurveys();
 }
 
 controllerClass.prototype.Login = function(){
@@ -22,15 +20,16 @@ controllerClass.prototype.Login = function(){
 
         this.LoginForm.ModelToForm(); 
         GlobalViewRef.LoginForm.Show(false);  
-        GlobalViewRef.Welcome.SetInnerHTML(`
+        GlobalViewRef.LoggedIn.SetInnerHTML(`
         <span>Welcome, ${loginModel.Login}</span>
-        <span class="btn btn-light" onclick="GlobalControllerRef.LogOut()">Log Out</span>`);   
+        <span class="btn btn-light" onclick="GlobalControllerRef.LogOut()">Log Out</span>`);
+        GlobalViewRef.ShowPage('surveyPage');
     });
 }
 
 controllerClass.prototype.LogOut = function(){
     this.Model.Authentication.UserID = null;
-    GlobalViewRef.Welcome.SetInnerHTML('');  
+    GlobalViewRef.LoggedIn.SetInnerHTML('');  
     GlobalViewRef.LoginForm.Show(true);  
     this.LoginForm.ModelToForm(this.Model.Authentication, 'loginForm'); 
 }
@@ -49,8 +48,13 @@ controllerClass.prototype.SignUp = function () {
 controllerClass.prototype.GetAllSurveys = function(){
     Data.Get('Survey').then(
         (res) => {
-            console.log(res)
-
             GlobalViewRef.DisplaySurveys(res.Result);
-        });
+    });
+}
+
+controllerClass.prototype.GetUserSurveys = function(){
+    Data.Get('Survey','*=*').then(
+        (res) => {
+            GlobalViewRef.DisplaySurveys(res.Result);
+    });
 }

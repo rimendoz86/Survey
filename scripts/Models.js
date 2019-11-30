@@ -13,13 +13,8 @@ function Authentication() {
     this.Password = null;
 }
 
-function Page(id, onNavigate = () => {return}) {
-    this.ID = id;
-    this.OnNavigate = onNavigate;
-    this.DomRef = new DomRef(id);
-}
-
 function DomRef(id){
+    this.ID = id;
     this.nativeElementRef = document.getElementById(id);
 
     this.SetOnClick = function(methodByRef){
@@ -56,11 +51,16 @@ function DomRef(id){
         this.nativeElementRef.reset();
     }
 
+    this.OnShow = () => { return };
+    this.OnHide = () => { return };
+
     this.Show = function (isShow) {
         if (isShow) {
             this.ReplaceClass("hide", null);
+            this.OnShow();
         } else {
             this.ReplaceClass(null, "hide");
+            this.OnHide();
         }
     }  
 }
@@ -217,26 +217,3 @@ function FormBinding(objectRef,formID, onChange = (modelData) =>{ return; }, onS
     };
     this.BindFormToModel();
 }
-
-// var EnumPage = {
-//     HomePage: 'homePage',
-//     Page2: 'page2'
-// };
-
-// Nav.prototype.PageConfig = function() {
-//     let pages = [
-//         new Page('homePage',function(){
-//             console.log("Home Page Loaded")
-//         }),
-//         new Page('page2')
-//     ];
-//     return pages;
-// };
-
-// Nav.prototype.GoTo = function(EnumPage){
-//     this.Pages.forEach((x) => {
-//         let show  = x.ID == EnumPage
-//         x.DomRef.Show(show);
-//         if (show) x.OnNavigate();
-//     });
-// };

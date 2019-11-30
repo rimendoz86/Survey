@@ -22,6 +22,16 @@ class Survey extends Data\Connection{
         WHERE eS.IsActive = 1;";
         return $this->dbSelect($sql);
     }
+
+    function GetUserSurveys($id){
+        $sql = "
+        SELECT eU.Login, eS.Name, eS.Description
+        FROM entitysurvey as eS
+        INNER JOIN xrefsurveyuser as xSU ON (eS.ID = xSU.SurveyID)
+        INNER JOIN entityuser as eU ON (eU.UserID = xSU.UserID)
+        WHERE eS.IsActive = 1 && xSU.UserID = $id";
+        return $this->dbSelect($sql);
+    }
 }
 
     class User extends Data\Connection{
