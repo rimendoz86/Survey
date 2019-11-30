@@ -7,21 +7,33 @@ class Login extends Data\Connection{
         //var_dump($authModel);
         return $this->dbSelect("
         Select UserID, Login, '' as Password, IsAdmin
-        FROM User
+        FROM entityUser
         Where Login = '$authModel->Login' 
         && Password =  BINARY '$authModel->Password' 
         && IsActive = 1");
     }
+}
+
+class Survey extends Data\Connection{
+    function GetAllSurveys(){
+        $sql = "
+        SELECT eS.Name, eS.Description, CreatedOn 
+        FROM entitysurvey as eS
+        WHERE eS.IsActive = 1;";
+        return $this->dbSelect($sql);
+    }
+}
+
     class User extends Data\Connection{
         function CheckForUser($req){
             $sql = "Select UserID
-            FROM user
+            FROM entityUser
             WHERE Login = '$req->Login'";
             return $this->dbSelect($sql);
         } 
         
         function Register($req){
-            $sql = "INSERT INTO user
+            $sql = "INSERT INTO entityUser
             (Login, Password)
             Values
             ('$req->Login','$req->Password')";
@@ -30,24 +42,24 @@ class Login extends Data\Connection{
         function GetAllUsers(){
             $sql = "
             SELECT UserID, Login, CreatedOn, IsAdmin, IsActive
-            FROM user";
+            FROM entityUser";
             return $this->dbSelect($sql);
         }
         function DeleteUser($id){
-            $sql = "UPDATE user SET IsActive = 0 where UserID = $id";
+            $sql = "UPDATE entityUser SET IsActive = 0 where UserID = $id";
             return $id;
         }
         function GetUser($id){
             $sql = "
             SELECT UserID, Login, UpdatedOn, IsAdmin, IsActive
-            FROM user
+            FROM entityUser
             WHERE UserID = $id";
             return $this->dbSelect($sql);
         }
         function UpdateUser($req){
             // die(json_encode($req));
             $sql = "
-            UPDATE user SET
+            UPDATE entityUser SET
             Login = '$req->Login',
             IsAdmin = $req->IsAdmin,
             IsActive = $req->IsActive
@@ -57,6 +69,5 @@ class Login extends Data\Connection{
             return $this->GetUser($req->UserID);
         }
     }
-}
 
 ?>

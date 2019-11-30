@@ -1,19 +1,20 @@
 function viewClass() {
     window.GlobalViewRef = this;
-    this.ProductsTable = new DomRef('productsTable');
+    this.ProductsTable = new DomRef('surveyTable');
+    this.LoginForm = new DomRef('loginForm');
+    this.Welcome = new DomRef('welcome');
 };
 
-viewClass.prototype.PopulateProductsTable = function (modelProducts) {
-    let tableContent = `<thead><tr><th>Image</th><th>Name</th><th>Description</th><th>Price</th><th></th></tr></thead>
+viewClass.prototype.DisplaySurveys = function (surveys) {
+    let tableContent = `<thead><tr><th>Name</th><th>Description</th><th>CreatedOn</th><th></th></tr></thead>
                         <tbody>`;
-    modelProducts.forEach(prod => {
+    surveys.forEach(survey => {
         tableContent += `
         <tr>
-            <td><img src="\\assets\\${prod.ImageRef}" /></td>
-            <td>${prod.Name}</td>
-            <td>${prod.Description}</td>
-            <td>$${prod.Price}</td>
-            <td><span class="btn btn-primary" onclick="GlobalControllerRef.AddItemToCart(${prod.ID},1)">Add</span></td>
+            <td>${survey.Name}</td>
+            <td>${survey.Description}</td>
+            <td>${survey.CreatedOn}</td>
+            <td><span class="btn btn-primary">Start</span></td>
         </tr>
         `
     });

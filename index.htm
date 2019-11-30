@@ -28,24 +28,28 @@
                         </ul>
                     </div>
                     <div class="col-37">
-                        <ul class="navSectionRight">
-                            <form id="loginForm" class="horizontalForm">
-                                <input type="test" name="Login" placeholder="Login" id="Login" autocomplete="login">
-                                <input type="password" name="Password" placeHolder="Password" id="Password"
-                                    autocomplete="current-password">
-                                <span class="btn btn-light" onclick='GlobalControllerRef.Login()'>Login</span>
-                            </form>
-                            <li>
-                                <span id="welcome"></span>
-                            </li>
-                        </ul>
-                    </div>
+                            <ul class="navSectionRight">
+                                <form id="loginForm" class="horizontalForm">
+                                    <input type="test" name="Login" placeholder="Login" id="Login" autocomplete="login">
+                                    <input type="password" name="Password" placeHolder="Password" id="Password"
+                                        autocomplete="current-password">
+                                    <span class="btn btn-light" onclick='GlobalControllerRef.Login()'>Login</span>
+                                    <span class="btn btn-light" onclick='GlobalControllerRef.SignUp()'>Sign Up</span>
+                                </form>
+                                <li>
+                                    <span id="welcome"></span>
+                                </li>
+                            </ul>
+                        </div>
                 </nav>
             </div>
         </div>
         <div id="routeContainer">
-            <div id="homePage" class="row hide">
-                This is the home page
+            <div id="homePage" class="row">
+                <div class="col-50">
+                    <h2>Surveys</h2>
+                    <table id="surveyTable"></table>
+                </div>
             </div>
             <div id="page2" class="row hide">
                     This is page 2
