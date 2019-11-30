@@ -2,6 +2,7 @@ function controllerClass (){
     this.Model = new modelClass();
     window.GlobalControllerRef = this;
     this.LoginForm = new FormBinding(ModelRef.Authentication,'loginForm');
+    this.Pages = this.PageConfig();
 }
 
 controllerClass.prototype.Login = function(){

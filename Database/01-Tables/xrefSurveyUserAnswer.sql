@@ -1,0 +1,16 @@
+DROP TABLE IF EXISTS xrefSurveyUserAnswer;
+CREATE TABLE xrefSurveyUserAnswer ( 
+    ID INT NOT NULL AUTO_INCREMENT,
+    SurveyID INT NOT NULL,
+    SurveyUserID INT NOT NULL,
+    Answer VARCHAR(50) NOT NULL,
+    CreatedOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UpdatedOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    IsActive bit(1) NOT NULL DEFAULT b'1',
+    PRIMARY KEY (ID)
+    );
+
+INSERT INTO xrefSurveyUserAnswer 
+(SurveyID, SurveyUserID, Answer)
+VALUES
+(1,1,"Ricardo Mendoza");

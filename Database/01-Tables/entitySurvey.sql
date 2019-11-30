@@ -1,0 +1,15 @@
+DROP TABLE IF EXISTS entitySurvey;
+CREATE TABLE entitySurvey ( 
+    ID INT NOT NULL AUTO_INCREMENT,
+    Name VARCHAR(50) NOT NULL,
+    Description VARCHAR(200) NOT NULL,
+    CreatedOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UpdatedOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    IsActive bit(1) NOT NULL DEFAULT b'1',
+    PRIMARY KEY (ID)
+    );
+
+INSERT INTO entitySurvey 
+(ID, Name, Description)
+VALUES
+(1, "Welcome", "Your first survey");

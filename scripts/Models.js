@@ -102,33 +102,22 @@ return val.match(re) ? true: false;
 
 var Data = {
     Get: (controller, params = '') => {
-        let promise = new Promise((resolve, reject) => {
-            let BaseURL = "\\_API\\Controllers\\";
-            let req = new XMLHttpRequest;
-            req.open("GET",BaseURL+controller+".php?"+params,true);
-            req.setRequestHeader("Content-type", "application/json");
-            req.onreadystatechange = (event) => {
-                let res = event.currentTarget;
-                if(res.readyState == 4 && res.status == 200){
-                    try{
-                        resolve(JSON.parse(res.responseText));
-                    }catch(err){
-                        console.log(res.responseText);
-                        reject(err);
-                    }
-                }else if (res.readyState == 4 && res.status != 200){
-                    reject(event);
-                }
-            }
-            req.send();
-        })
-        return promise;
+        return Data._ReqWithURI('GET',controller,params)
     },
-    Post: (controller, params) => {
+    Post:(controller, params) => {
+        return Data._ReqWithBody('POST',controller,params)
+    },
+    Put:(controller, params) => {
+        return Data._ReqWithBody('PUT',controller,params)
+    },
+    Delete: (controller, id) => {
+        return Data._ReqWithURI('DELETE',controller,`id=${id}`)
+    },
+    _ReqWithBody: (verb, controller, params) => {
         let promise = new Promise((resolve, reject) => {
             let BaseURL = "\\_API\\Controllers\\";
             let req = new XMLHttpRequest;
-            req.open("POST",BaseURL+controller+".php",true);
+            req.open(verb,BaseURL+controller+".php",true);
             req.setRequestHeader("Content-Type", "application/json");
             req.onreadystatechange = (event) => {
                 let res = event.currentTarget;
@@ -145,6 +134,29 @@ var Data = {
             }
             let paramsJson = JSON.stringify(params);
             req.send(paramsJson);
+        })
+        return promise;
+    },
+    _ReqWithURI: (verb, controller, params) => {
+        let promise = new Promise((resolve, reject) => {
+            let BaseURL = "\\_API\\Controllers\\";
+            let req = new XMLHttpRequest;
+            req.open(verb,BaseURL+controller+".php?"+params,true);
+            req.setRequestHeader("Content-type", "application/json");
+            req.onreadystatechange = (event) => {
+                let res = event.currentTarget;
+                if(res.readyState == 4 && res.status == 200){
+                    try{
+                        resolve(JSON.parse(res.responseText));
+                    }catch(err){
+                        console.log(res.responseText);
+                        reject(err);
+                    }
+                }else if (res.readyState == 4 && res.status != 200){
+                    reject(event);
+                }
+            }
+            req.send();
         })
         return promise;
     }
@@ -172,7 +184,7 @@ function FormBinding(objectRef,formID, onChange = (modelData) =>{ return; }, onS
         event.preventDefault();
         if(this.FormToModel(this.ObjectRef,this.FormID))
             this.OnChange(this.ObjectRef);
-        this.OnSubmit(this.ObjectRef);
+        this.OnSubmit();
     });
     }
 
@@ -182,8 +194,8 @@ function FormBinding(objectRef,formID, onChange = (modelData) =>{ return; }, onS
     let changeFound = false;
     objKeys.forEach((key) => {
         let formInput = formRef.elements[key];
-        if (formInput && formInput.value != objectRef[key]){
-          formInput.value = objectRef[key] ? objectRef[key] : '';
+        if (formInput && formInput.value !== objectRef[key]){
+          formInput.value = objectRef[key] != undefined ? objectRef[key].toString() : '';
           changeFound = true;
         } 
         });
@@ -205,3 +217,26 @@ function FormBinding(objectRef,formID, onChange = (modelData) =>{ return; }, onS
     };
     this.BindFormToModel();
 }
+
+var EnumPage = {
+    HomePage: 'homePage',
+    Page2: 'page2'
+};
+
+Nav.prototype.PageConfig = function() {
+    let pages = [
+        new Page('homePage',function(){
+            console.log("Home Page Loaded")
+        }),
+        new Page('page2')
+    ];
+    return pages;
+};
+
+Nav.prototype.GoTo = function(EnumPage){
+    this.Pages.forEach((x) => {
+        let show  = x.ID == EnumPage
+        x.DomRef.Show(show);
+        if (show) x.OnNavigate();
+    });
+};
