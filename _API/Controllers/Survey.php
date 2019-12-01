@@ -20,6 +20,10 @@ class Survey extends API\APIBase{
         $repository = new Repository\Survey();
         $this->Response->Result = $repository->GetUserSurveys($user->UserID);
     }
+
+    function Post($req){
+        
+    }
 }
 new Survey();
 ?>

@@ -17,9 +17,8 @@ class Login extends Data\Connection{
 class Survey extends Data\Connection{
     function GetAllSurveys(){
         $sql = "
-        SELECT eS.Name, eS.Description, CreatedOn 
-        FROM entitysurvey as eS
-        WHERE eS.IsActive = 1;";
+        SELECT eS.ID, eS.Name, eS.Description, CreatedOn, IsActive  
+        FROM entitysurvey as eS;";
         return $this->dbSelect($sql);
     }
 
@@ -31,6 +30,20 @@ class Survey extends Data\Connection{
         INNER JOIN entityuser as eU ON (eU.UserID = xSU.UserID)
         WHERE eS.IsActive = 1 && xSU.UserID = $id";
         return $this->dbSelect($sql);
+    }
+
+    function CreateSurvey($req){
+        $sql = "INSERT INTO entitySurvey
+        (
+            Name, 
+            Description
+        )
+        VALUES
+        (
+            '$req->Name',
+            '$req->Description'
+        )";
+        return $this->dbSelect($req)
     }
 }
 

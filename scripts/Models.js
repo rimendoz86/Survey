@@ -1,10 +1,10 @@
-
-function Product(id, name, description, imageRef, price) {
-    this.ID = id;
-    this.Name = name;
-    this.Description = description;
-    this.ImageRef = imageRef;
-    this.Price = price;
+function Survey() {
+    this.ID = null;
+    this.Name = null;
+    this.Description = null;
+    this.IsActive = null;
+    this.CreatedOn = null;
+    this.UpdatedOn = null;
 }
 
 function Authentication() {
@@ -184,7 +184,7 @@ function FormBinding(objectRef,formID, onChange = (modelData) =>{ return; }, onS
         event.preventDefault();
         if(this.FormToModel(this.ObjectRef,this.FormID))
             this.OnChange(this.ObjectRef);
-        this.OnSubmit();
+        this.OnSubmit(this.ObjectRef);
     });
     }
 

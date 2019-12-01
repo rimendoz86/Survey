@@ -1,7 +1,21 @@
 function controllerClass (){
     this.Model = new modelClass();
     window.GlobalControllerRef = this;
+    this.RegisterForms();
+}
+
+controllerClass.prototype.ShowPage = function (pageID){
+    GlobalViewRef.Pages.forEach((page) =>{
+        page.Show(page.ID == pageID);
+        });
+};
+
+controllerClass.prototype.RegisterForms = function(){
     this.LoginForm = new FormBinding(ModelRef.Authentication,'loginForm');
+
+    this.EditSurvey = new FormBinding(ModelRef.EditSurvey,'addSurvey')
+    this.EditSurvey.OnSubmit = (s) => { console.log(s)};
+
 }
 
 controllerClass.prototype.Login = function(){
@@ -23,7 +37,7 @@ controllerClass.prototype.Login = function(){
         GlobalViewRef.LoggedIn.SetInnerHTML(`
         <span>Welcome, ${loginModel.Login}</span>
         <span class="btn btn-light" onclick="GlobalControllerRef.LogOut()">Log Out</span>`);
-        GlobalViewRef.ShowPage('surveyPage');
+        this.ShowPage('surveyPage');
     });
 }
 
@@ -48,7 +62,7 @@ controllerClass.prototype.SignUp = function () {
 controllerClass.prototype.GetAllSurveys = function(){
     Data.Get('Survey').then(
         (res) => {
-            GlobalViewRef.DisplaySurveys(res.Result);
+            GlobalViewRef.DisplayAdminSurveys(res.Result);
     });
 }
 

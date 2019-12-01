@@ -1,6 +1,7 @@
 function viewClass() {
     window.GlobalViewRef = this;
-    this.SurveyTable = new DomRef('surveyTable');
+    this.UserSurveyTable = new DomRef('surveyTable');
+    this.AdminSurveyTable = new DomRef('adminSurveys');
     this.LoginForm = new DomRef('loginForm');
     this.LoggedIn = new DomRef('loggedIn');
     this.Pages = this.PageConfig();
@@ -18,9 +19,33 @@ viewClass.prototype.PageConfig = function(){
     }
     pages.push(surveyPage);
 
+    let createSurveyPage = new DomRef('createSurveyPage');
+    createSurveyPage.OnShow = () => {
+        GlobalControllerRef.GetAllSurveys();
+    }
+    pages.push(createSurveyPage);
     return pages;
 
 };
+
+viewClass.prototype.DisplayAdminSurveys = function (surveys) {
+    let tableContent = `<thead><tr><th></th><th>ID</th><th>Name</th><th>Description</th><th>CreatedOn</th><th>IsActive</th></tr></thead>
+                        <tbody>`;
+    surveys.forEach(survey => {
+        tableContent += `
+        <tr>
+            <td><span class="btn btn-light">Edit</span></td>
+            <td>${survey.ID}</td>
+            <td>${survey.Name}</td>
+            <td>${survey.Description}</td>
+            <td>${survey.CreatedOn}</td>
+            <td>${survey.IsActive}</td>
+        </tr>
+        `
+    });
+    tableContent += "</tbody>"
+    this.AdminSurveyTable.SetInnerHTML(tableContent);
+}
 
 viewClass.prototype.DisplaySurveys = function (surveys) {
     let tableContent = `<thead><tr><th>Name</th><th>Description</th><th>CreatedOn</th><th></th></tr></thead>
@@ -36,11 +61,5 @@ viewClass.prototype.DisplaySurveys = function (surveys) {
         `
     });
     tableContent += "</tbody>"
-    this.SurveyTable.SetInnerHTML(tableContent);
+    this.UserSurveyTable.SetInnerHTML(tableContent);
 }
-
-viewClass.prototype.ShowPage = function (pageID){
-    this.Pages.forEach((page) =>{
-        page.Show(page.ID == pageID);
-        });
-};
