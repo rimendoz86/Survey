@@ -7,14 +7,14 @@ function controllerClass (){
 controllerClass.prototype.ShowPage = function (pageID){
     GlobalViewRef.Pages.forEach((page) =>{
         page.Show(page.ID == pageID);
-        });
+    });
 };
 
 controllerClass.prototype.RegisterForms = function(){
     this.LoginForm = new FormBinding(ModelRef.Authentication,'loginForm');
 
-    this.EditSurvey = new FormBinding(ModelRef.EditSurvey,'addSurvey')
-    this.EditSurvey.OnSubmit = (s) => { console.log(s)};
+    this.SurveyForm = new FormBinding(ModelRef.EditSurvey,'addSurvey')
+    this.SurveyForm.OnSubmit = (s) => { this.InsertSurvey()};
 
 }
 
@@ -60,15 +60,19 @@ controllerClass.prototype.SignUp = function () {
   }
 
 controllerClass.prototype.GetAllSurveys = function(){
-    Data.Get('Survey').then(
-        (res) => {
+    Data.Get('Survey').then((res) => {
             GlobalViewRef.DisplayAdminSurveys(res.Result);
     });
 }
 
 controllerClass.prototype.GetUserSurveys = function(){
-    Data.Get('Survey','*=*').then(
-        (res) => {
+    Data.Get('Survey','*').then((res) => {
             GlobalViewRef.DisplaySurveys(res.Result);
     });
 }
+
+controllerClass.prototype.InsertSurvey = function(){
+    Data.Post('Survey',this.Model.EditSurvey).then((res)=>{
+            this.GetAllSurveys();
+        });
+};

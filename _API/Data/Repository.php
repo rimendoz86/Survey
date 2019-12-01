@@ -32,18 +32,20 @@ class Survey extends Data\Connection{
         return $this->dbSelect($sql);
     }
 
-    function CreateSurvey($req){
+    function Insert($req){
         $sql = "INSERT INTO entitySurvey
         (
             Name, 
-            Description
+            Description,
+            IsActive
         )
         VALUES
         (
             '$req->Name',
-            '$req->Description'
+            '$req->Description',
+            $req->IsActive
         )";
-        return $this->dbSelect($req)
+        return $this->dbInsert($sql);
     }
 }
 

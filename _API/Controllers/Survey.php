@@ -22,7 +22,15 @@ class Survey extends API\APIBase{
     }
 
     function Post($req){
-        
+        die(json_encode($req));
+        $user = $this->Sess_Auth->get();
+        if(!isset($user)){
+            $this->AddValidationMessage("You must be logged in to do this.");
+            $this->SendResponse(200);
+        }
+
+        $repository = new Repository\Survey();
+        $this->Response->Result = $repository->Insert($req);
     }
 }
 new Survey();
