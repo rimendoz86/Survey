@@ -5,6 +5,8 @@ function viewClass() {
     this.LoginForm = new DomRef('loginForm');
     this.LoggedIn = new DomRef('loggedIn');
     this.Pages = this.PageConfig();
+    this.QuestionList = new DomRef('questionList');
+    this.QuestionForms = [];
 };
 
 viewClass.prototype.PageConfig = function(){
@@ -64,3 +66,22 @@ viewClass.prototype.DisplayAdminSurveys = function (surveys) {
     this.AdminSurveyTable.SetInnerHTML(tableContent);
 }
 
+viewClass.prototype.DisplayQuestionForms = function (){
+    for (let i = 0; i < 5; i++){
+        let questionForm = `                                
+        <form id="questionForm_${i}" class="horizontalForm">
+            <input type="text" name="Name" id="questionName_${i}" placeholder="Question">
+            <input type="text" name="Options" id="questionOptions_${i}"
+                placeHolder="Options: Blank for text (Yes,No,Maybe) for options">
+            <input type="button" class="btn btn-alert" value="Remove">
+            <input type="submit" class="btn btn-primary" value="Save">
+        </form>`;
+        let container = document.createElement("div");
+        container.innerHTML = questionForm;
+        this.QuestionList.AppendChild(container);
+
+        let questionFormBind = new FormBinding(new Question(),`questionForm_${i}`);
+        questionFormBind.OnSubmit = (model) => {console.log(model)};
+        this.QuestionForms.push(questionFormBind);
+    }
+}

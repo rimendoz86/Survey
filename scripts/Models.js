@@ -2,9 +2,20 @@ function Survey() {
     this.ID = null;
     this.Name = null;
     this.Description = null;
-    this.IsActive = null;
+    this.IsActive = 1;
     this.CreatedOn = null;
     this.UpdatedOn = null;
+}
+
+function Question(){
+    this.ID  = null;
+    this.SurveyID = null;
+    this.QuestionOrder = null;
+    this.Question  = null;
+    this.Options  = null;
+    this.CreatedOn = null;
+    this.UpdatedOn = null;
+    this.IsActive = 1;
 }
 
 function Authentication() {
