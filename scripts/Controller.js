@@ -61,13 +61,14 @@ controllerClass.prototype.SignUp = function () {
 
 controllerClass.prototype.GetAllSurveys = function(){
     Data.Get('Survey').then((res) => {
-            GlobalViewRef.DisplayAdminSurveys(res.Result);
+        this.Model.Surveys = res.Result;
+        GlobalViewRef.DisplayAdminSurveys(res.Result);
     });
 }
 
 controllerClass.prototype.GetUserSurveys = function(){
     Data.Get('Survey','*').then((res) => {
-            GlobalViewRef.DisplaySurveys(res.Result);
+        GlobalViewRef.DisplaySurveys(res.Result);
     });
 }
 
@@ -76,3 +77,15 @@ controllerClass.prototype.InsertSurvey = function(){
             this.GetAllSurveys();
         });
 };
+
+controllerClass.prototype.SetEditSurvey = function (surveyID){
+    let survey = this.Model.Surveys.find( x => x.ID == surveyID);
+    Object.assign(this.Model.EditSurvey, survey)
+    this.SurveyForm.ModelToForm();
+    //GlobalViewRef.UserEdit.Show(true);
+}
+
+controllerClass.prototype.ClearEditSurvey = function(){
+    Object.assign(this.Model.EditSurvey, new Survey());
+    this.SurveyForm.ModelToForm();
+}

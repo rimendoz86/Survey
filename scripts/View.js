@@ -28,25 +28,6 @@ viewClass.prototype.PageConfig = function(){
 
 };
 
-viewClass.prototype.DisplayAdminSurveys = function (surveys) {
-    let tableContent = `<thead><tr><th></th><th>ID</th><th>Name</th><th>Description</th><th>CreatedOn</th><th>IsActive</th></tr></thead>
-                        <tbody>`;
-    surveys.forEach(survey => {
-        tableContent += `
-        <tr>
-            <td><span class="btn btn-light">Edit</span></td>
-            <td>${survey.ID}</td>
-            <td>${survey.Name}</td>
-            <td>${survey.Description}</td>
-            <td>${survey.CreatedOn}</td>
-            <td>${survey.IsActive}</td>
-        </tr>
-        `
-    });
-    tableContent += "</tbody>"
-    this.AdminSurveyTable.SetInnerHTML(tableContent);
-}
-
 viewClass.prototype.DisplaySurveys = function (surveys) {
     let tableContent = `<thead><tr><th>Name</th><th>Description</th><th>CreatedOn</th><th></th></tr></thead>
                         <tbody>`;
@@ -63,3 +44,23 @@ viewClass.prototype.DisplaySurveys = function (surveys) {
     tableContent += "</tbody>"
     this.UserSurveyTable.SetInnerHTML(tableContent);
 }
+
+viewClass.prototype.DisplayAdminSurveys = function (surveys) {
+    let tableContent = `<thead><tr><th></th><th>ID</th><th>Name</th><th>Description</th><th>CreatedOn</th><th>IsActive</th></tr></thead>
+                        <tbody>`;
+    surveys.forEach(survey => {
+        tableContent += `
+        <tr>
+            <td><span class="btn btn-light" onclick="GlobalControllerRef.SetEditSurvey(${survey.ID})">Edit</span></td>
+            <td>${survey.ID}</td>
+            <td>${survey.Name}</td>
+            <td>${survey.Description}</td>
+            <td>${survey.CreatedOn}</td>
+            <td>${survey.IsActive}</td>
+        </tr>
+        `
+    });
+    tableContent += "</tbody>"
+    this.AdminSurveyTable.SetInnerHTML(tableContent);
+}
+

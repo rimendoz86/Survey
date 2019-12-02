@@ -50,9 +50,9 @@
                         <span class="btn btn-light" 
                         onclick="GlobalControllerRef.ShowPage('welcomePage')">Home</span>
                         <span class="btn btn-light" 
-                        onclick="GlobalControllerRef.ShowPage('surveyPage')">Survey</span>
+                        onclick="GlobalControllerRef.ShowPage('surveyPage')">Your Surveys</span>
                         <span class="btn btn-light" 
-                        onclick="GlobalControllerRef.ShowPage('createSurveyPage')">Create Survey</span>
+                        onclick="GlobalControllerRef.ShowPage('createSurveyPage')">Admin</span>
                         
                     </div>
                 </div>
@@ -74,18 +74,38 @@
                 </div>
             </div>
             <div id="createSurveyPage" class="row hide">
-                <div class="col-50">
-                    <h2>All Surveys</h2>
-                    <table id="adminSurveys"></table>
-                </div>
-                <div class="col-50">
-                    <h2>Add/Edit Survey</h2>
-                    <form id="addSurvey">
-                        <input type="text" name="Name" id="addName" placeholder="Name">
-                        <textarea name="Description" id="addDescription" cols="20" rows="4" placeholder="Description"></textarea>
-                        <input type="text" id="addIsActive" name="IsActive" placeholder="IsActive">
-                        <input class="btn btn-primary float-right" type="submit" value="Save">
-                    </form>
+                <div class="col-100">
+                    <div class="row">
+                        <div class="col-50">
+                            <h2>All Surveys</h2>
+                            <table id="adminSurveys"></table>
+                        </div>
+                        <div class="col-50">
+                            <h2>Add/Edit Survey</h2>
+                            <form id="addSurvey">
+                                <input type="text" name="Name" id="addName" placeholder="Name">
+                                <textarea name="Description" id="addDescription" cols="20" rows="4" placeholder="Description"></textarea>
+                                <input type="number" id="addIsActive" name="IsActive" placeholder="IsActive (1/0)" min="0" max="1">
+                                <input class="btn btn-primary float-right" type="submit" value="Save">
+                                <span class="btn btn-light float-right" onclick="GlobalControllerRef.ClearEditSurvey()">Clear</span>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-100">
+                            <h2>Questions</h2>
+                            <form id="questionForm" class="horizontalForm">
+                                <input type="number" name="QuestionOrder" id="questionOrder_1" placeholder="Order">
+                                <input type="text" name="Name" id="questionName_1" placeholder="Question">
+                                <input type="text" name="Options" id="questionOptions_1" placeHolder="Options: Blank for text (Yes,No,Maybe) for options">
+                                <input type="button" class="btn btn-alert" value="Remove">
+                                <input type="submit" class="btn btn-primary" value="Save">
+                            </form>
+                            <div>
+                                <input type="button" class="btn btn-light float-right" value="Add Question">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 

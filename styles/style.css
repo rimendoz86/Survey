@@ -151,6 +151,10 @@ input, select, textarea {
     background-color: #f8f9fa
 }
 
+.btn.btn-alert{
+    background-color: #ff2121;
+    color: white;
+}
 
 .hide {
     display:none !important;

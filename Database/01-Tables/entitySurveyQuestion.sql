@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS entitySurveyQuestion;
 CREATE TABLE entitySurveyQuestion ( 
     ID INT NOT NULL AUTO_INCREMENT,
     SurveyID INT NOT NULL,
+    QuestionOrder INT NOT NULL,
     Question VARCHAR(50) NOT NULL,
     Options VARCHAR (500) NULL,
     CreatedOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
