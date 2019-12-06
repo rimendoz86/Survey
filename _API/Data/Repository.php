@@ -18,7 +18,8 @@ class Survey extends Data\Connection{
     function GetAllSurveys(){
         $sql = "
         SELECT eS.ID, eS.Name, eS.Description, CreatedOn, IsActive  
-        FROM entitysurvey as eS;";
+        FROM entitysurvey as eS
+        WHERE eS.IsActive = 1;";
         return $this->dbSelect($sql);
     }
 
@@ -47,6 +48,17 @@ class Survey extends Data\Connection{
         )";
         return $this->dbInsert($sql);
     }
+
+    function Update($req){
+        $sql = "UPDATE entitySurvey SET
+        Name = '$req->Name',
+        Description = '$req->Description',
+        IsActive = $req->IsActive
+        WHERE ID = $req->ID;
+        ";
+        return $this->dbUpdate($sql);
+    }
+
 }
 
     class User extends Data\Connection{
@@ -95,4 +107,47 @@ class Survey extends Data\Connection{
         }
     }
 
+
+    class SurveyQuestion extends Data\Connection{
+        function SelectBySurveyID($req){
+            $sql = "
+            SELECT eSQ.ID, eSQ.SurveyID, eSQ.QuestionOrder, eSQ.Question, eSQ.Options, eSQ.IsActive  
+            FROM entitysurveyquestion as eSQ 
+            WHERE eSQ.SurveyID = $req->SurveyID AND eSQ.IsActive 
+            ORDER BY eSQ.QuestionOrder ASC, eSQ.ID;
+            ";
+            return $this->dbSelect($sql);
+        }
+
+        function Insert($req){
+            $isActive = (int) $req->IsActive; 
+            $sql = "INSERT INTO entitysurveyquestion
+            (SurveyID, QuestionOrder, Question, Options, IsActive)  
+            VALUES
+            ($req->SurveyID, $req->QuestionOrder,'$req->Question','$req->Options', $isActive);
+            ";
+            return $this->dbInsert($sql);
+        }
+
+        function Update($req){
+            $sql = "UPDATE entitysurveyquestion SET
+            SurveyID = $req->SurveyID,
+            QuestionOrder = $req->QuestionOrder,
+            Question = '$req->Question',
+            Options = '$req->Options', 
+            IsActive = $req->IsActive
+            WHERE ID = $req->ID;
+            ";
+            return $this->dbUpdate($sql);
+        }
+
+        function Delete($req){
+            $sql = "UPDATE entitysurveyquestion SET
+            IsActive = 0
+            WHERE ID = $req;
+            ";
+            return $this->dbUpdate($sql);
+        }
+
+    }
 ?>

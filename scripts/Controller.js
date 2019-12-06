@@ -74,18 +74,52 @@ controllerClass.prototype.GetUserSurveys = function(){
 
 controllerClass.prototype.InsertSurvey = function(){
     Data.Post('Survey',this.Model.EditSurvey).then((res)=>{
-            this.GetAllSurveys();
-        });
+        this.GetAllSurveys();
+    });
 };
 
 controllerClass.prototype.SetEditSurvey = function (surveyID){
     let survey = this.Model.Surveys.find( x => x.ID == surveyID);
     Object.assign(this.Model.EditSurvey, survey)
     this.SurveyForm.ModelToForm();
-    //GlobalViewRef.UserEdit.Show(true);
+    this.GetQuestionBySurveyID(survey.ID)
 }
 
 controllerClass.prototype.ClearEditSurvey = function(){
     Object.assign(this.Model.EditSurvey, new Survey());
     this.SurveyForm.ModelToForm();
+}
+
+controllerClass.prototype.GetQuestionBySurveyID = function(){
+    let surveyID = this.Model.EditSurvey.ID;
+    Data.Get('SurveyQuestion',`SurveyID=${surveyID}`).then(res =>{
+        this.Model.SurveyQuestions = res.Result
+        GlobalViewRef.DisplayQuestionForms(res.Result);
+    });
+}
+
+controllerClass.prototype.AddQuestion = function(){
+    let questions = this.Model.SurveyQuestions;
+    let newQuestions = new Question();
+    let questionOrders = questions.map(x => x.QuestionOrder);
+
+    newQuestions.QuestionOrder = questionOrders.length == 0 ? 1 : Math.max(...questionOrders) + 1;
+    newQuestions.SurveyID = this.Model.EditSurvey.ID;
+
+    Data.Post('SurveyQuestion', newQuestions).then((res) => {
+        this.GetQuestionBySurveyID(newQuestions.SurveyID)
+    });
+}
+
+controllerClass.prototype.DeleteQuestion = function(id){
+    let editSurvey = this.Model.EditSurvey;
+    Data.Delete('SurveyQuestion',id).then((res)=>{
+        this.GetQuestionBySurveyID(editSurvey.ID)
+    });
+}
+
+controllerClass.prototype.UpdateQuestion = function(question){
+    Data.Put('SurveyQuestion', question).then((res)=>{
+
+    });
 }

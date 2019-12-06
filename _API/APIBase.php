@@ -39,19 +39,19 @@ class APIBase {
         $this->SendResponse(200);
     }
     function Post($requestObject){
-        echo json_encode($this->Response);
+        $this->SendResponse(200);
     }
     function Put($requestObject){
-        echo json_encode($this->Response);
+        $this->SendResponse(200);
     }
     function Delete($requestObject){
-        echo json_encode($this->Response);
+        $this->SendResponse(200);
     }
     function Get(){
-        echo json_encode($this->Response);
+        $this->SendResponse(200);
     }
     function GetWith($requestObject){
-        echo json_encode($this->Response);
+        $this->SendResponse(200);
     }
     function SendResponse($responseCode){
         http_response_code($responseCode);

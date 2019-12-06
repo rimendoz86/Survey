@@ -67,13 +67,21 @@ function DomRef(id){
 
     this.Show = function (isShow) {
         if (isShow) {
-            this.ReplaceClass("hide", null);
+            this.ReplaceClass("hide", 'show');
             this.OnShow();
         } else {
-            this.ReplaceClass(null, "hide");
+            this.ReplaceClass('show', "hide");
             this.OnHide();
         }
     }  
+
+    this.Dirty = function (isDirty){
+        if (isDirty) {
+            this.ReplaceClass('clean', "dirty");
+        } else {
+            this.ReplaceClass("dirty", 'clean');
+        }
+    }
 }
 
 //Static Methods
@@ -179,23 +187,31 @@ function FormBinding(objectRef,formID, onChange = (modelData) =>{ return; }, onS
     this.FormRef = new DomRef(formID);
     this.OnChange = onChange;
     this.OnSubmit = onSubmit;
+    this.IsDirty = false;
 
     this.BindFormToModel = function() {
     this.FormRef.nativeElementRef.addEventListener("keyup", (event) => {
-        if(this.FormToModel(this.ObjectRef,this.FormID)) 
+        if(this.FormToModel(this.ObjectRef,this.FormID)) {
             this.OnChange(this.ObjectRef);
+            this.IsDirty = true;
+        }
+            
     });
 
     this.FormRef.nativeElementRef.addEventListener("change", (event) => {
-        if(this.FormToModel(this.ObjectRef,this.FormID))
+        if(this.FormToModel(this.ObjectRef,this.FormID)) {
             this.OnChange(this.ObjectRef);
+            this.IsDirty = true;
+        }
     });
 
     this.FormRef.nativeElementRef.addEventListener("submit", (event) => {
         event.preventDefault();
         if(this.FormToModel(this.ObjectRef,this.FormID))
             this.OnChange(this.ObjectRef);
+
         this.OnSubmit(this.ObjectRef);
+        this.IsDirty = false;
     });
     }
 

@@ -30,6 +30,7 @@ class Connection {
     function dbSelect($SQLCommand){
         $stmt = $this->Conn->prepare($SQLCommand);   
         if($stmt == false){
+            echo $SQLCommand;
             die(json_encode($this->Conn->error_list));
         }
         $stmt->execute();
@@ -41,11 +42,23 @@ class Connection {
     function dbInsert($SQLCommand){
         $stmt = $this->Conn->prepare($SQLCommand);   
         if($stmt == false){
+            echo $SQLCommand;
             die(json_encode($this->Conn->error_list));
         }
         $stmt->execute();
         $stmt->close();
         return $this->Conn->insert_id;
+    }
+        
+    function dbUpdate($SQLCommand){
+        $stmt = $this->Conn->prepare($SQLCommand);   
+        if($stmt == false){
+            echo $SQLCommand;
+            die(json_encode($this->Conn->error_list));
+        }
+        $res = $stmt->execute();
+        $stmt->close();
+        return $res;
     }
 }
 ?>

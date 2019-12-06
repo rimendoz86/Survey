@@ -66,22 +66,34 @@ viewClass.prototype.DisplayAdminSurveys = function (surveys) {
     this.AdminSurveyTable.SetInnerHTML(tableContent);
 }
 
-viewClass.prototype.DisplayQuestionForms = function (){
-    for (let i = 0; i < 5; i++){
-        let questionForm = `                                
-        <form id="questionForm_${i}" class="horizontalForm">
-            <input type="text" name="Name" id="questionName_${i}" placeholder="Question">
-            <input type="text" name="Options" id="questionOptions_${i}"
-                placeHolder="Options: Blank for text (Yes,No,Maybe) for options">
-            <input type="button" class="btn btn-alert" value="Remove">
-            <input type="submit" class="btn btn-primary" value="Save">
-        </form>`;
-        let container = document.createElement("div");
-        container.innerHTML = questionForm;
-        this.QuestionList.AppendChild(container);
-
-        let questionFormBind = new FormBinding(new Question(),`questionForm_${i}`);
-        questionFormBind.OnSubmit = (model) => {console.log(model)};
-        this.QuestionForms.push(questionFormBind);
+viewClass.prototype.DisplayQuestionForms = function (questions){
+    if (!questions || questions.length == 0) {
+        this.QuestionList.SetInnerHTML("There were no questions found, pleast add some.");
+        return;
     }
+    this.QuestionList.SetInnerHTML("");
+        questions.forEach((question, index) => {
+            let questionForm = `                                
+            <form id="questionForm_${question.ID}" class="horizontalForm">
+                <input type="number" name="QuestionOrder" id="questionOrder_${question.ID}" placeholder="Question Order" value="${question.QuestionOrder}">
+                <input type="text" name="Question" id="questionQuestion_${question.ID}" placeholder="Question" value="${question.Question}">
+                <input type="text" name="Options" id="questionOptions_${question.ID}" value="${question.Options}"
+                    placeHolder="Options: Blank for text (Yes,No,Maybe) for options">
+                <input type="button" class="btn btn-alert" value="Remove" onclick="GlobalControllerRef.DeleteQuestion(${question.ID})">
+                <input type="submit" class="btn btn-primary" value="Save">
+            </form>`;
+            let container = document.createElement("div");
+            container.innerHTML = questionForm;
+            this.QuestionList.AppendChild(container);
+    
+            let questionFormBind = new FormBinding(question,`questionForm_${question.ID}`);
+            questionFormBind.OnSubmit = (model) => {
+                GlobalControllerRef.UpdateQuestion(model);
+                questionFormBind.FormRef.Dirty(false);
+            };
+            questionFormBind.OnChange = () => { 
+                questionFormBind.FormRef.Dirty(true);
+            }
+            this.QuestionForms.push(questionFormBind);
+        });
 }
