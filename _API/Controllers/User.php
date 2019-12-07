@@ -13,10 +13,12 @@ class User extends API\APIBase{
         $repository = new Repository\User();
         $this->Response->Result = $repository->GetAllUsers();
     }
+    
     function GetWith($req) {
         $repository = new Repository\User();
         $this->Response->Result = $repository->GetUser($req->id);
     }
+
     function Post($req){
         //Validation: Ensure request has required params
         if(empty($req->Login) || empty($req->Password)){
@@ -34,9 +36,9 @@ class User extends API\APIBase{
         //Response: return response
         $this->Response->Result = $repository->Register($req);
     }
+
     function Put($req){
-        // $this->Response->Result = $req;
-        // $this->SendResponse(200);
+
         $user = $this->Sess_Auth->get();
         if(!isset($user) || !$user->IsAdmin){
             array_push($this->ValidationMessages, "You don't have the rights to do this");

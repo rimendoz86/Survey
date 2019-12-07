@@ -113,7 +113,7 @@ var LocalStorage = {
 
 var RegexType = {
     Username: `^[a-z0-9_-]{3,15}$`,
-    Password: `((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})`,
+    Password: `((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%*]).{6,20})`,
     Hexadecimal: `^#([\iA-Fa-f0-9]{6}|[\iA-Fa-f0-9]{3})$`,
     Email: `^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$`,
     Image: `([^\\s]+(\\.(jpg|png|gif|bmp))$)`,

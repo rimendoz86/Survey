@@ -20,13 +20,22 @@ viewClass.prototype.PageConfig = function(){
 
     let surveyPage = new DomRef('surveyPage');
     surveyPage.OnShow = () => {
-        GlobalControllerRef.GetUserSurveys();
+        if(ModelRef.Authentication.UserID){
+            GlobalControllerRef.GetUserSurveys();
+        }else{
+        GlobalControllerRef.ShowPage('welcomePage')
+        }
+
     }
     pages.push(surveyPage);
 
     let createSurveyPage = new DomRef('createSurveyPage');
     createSurveyPage.OnShow = () => {
+        if(ModelRef.Authentication.IsAdmin){
         GlobalControllerRef.GetAllSurveys();
+        }else{
+            GlobalControllerRef.ShowPage('welcomePage')
+        }
     }
     pages.push(createSurveyPage);
     return pages;
@@ -81,6 +90,7 @@ viewClass.prototype.DisplayQuestionForms = function (questions){
         this.QuestionList.SetInnerHTML("There were no questions found, pleast add some.");
         return;
     }
+    this.QuestionForms = [];
     this.QuestionList.SetInnerHTML("");
         questions.forEach((question, index) => {
             let questionForm = `                                
@@ -88,7 +98,7 @@ viewClass.prototype.DisplayQuestionForms = function (questions){
                 <input type="number" style="width: 10%;" name="QuestionOrder" id="questionOrder_${question.ID}" placeholder="Question Order" value="${question.QuestionOrder}">
                 <input type="text" name="Question" id="questionQuestion_${question.ID}" placeholder="Question" value="${question.Question}">
                 <input type="text" name="Options" id="questionOptions_${question.ID}" value="${question.Options}"
-                    placeHolder="Options: Blank for Text CSV for Options">
+                    placeHolder="Options: Blank for Text OR CSV for Options">
                 <input type="button" class="btn btn-alert" value="Remove" onclick="GlobalControllerRef.DeleteQuestion(${question.ID})">
                 <input type="submit" class="btn btn-primary" value="Save">
             </form>`;
@@ -114,22 +124,24 @@ viewClass.prototype.DisplayAnswerForm = function(answers){
         return;
     }
     this.AnswerList.SetInnerHTML("");
-
+    this.AnswerForms = []
         answers.forEach((answer, index) => {
+            let formID = `answerForm_${answer.SurveyID}${answer.QuestionID}${answer.SurveyUserID}`
             let answerAnswer = answer.Answer ? answer.Answer : '';
             let answerBox = `<input type="text" name="Answer" id="answerAnswer_${answer.ID}" placeholder="Answer" value="${answerAnswer}">`
 
             if (answer.Options){
                 let options = answer.Options.split(',');
-                answerBox = `<select name="Answer" id="answerAnswer_${answer.ID}" placeholder="Answer" value="${answerAnswer}">`
+                answerBox = `<select name="Answer" id="answerAnswer_${answer.ID}" placeholder="Answer">`
+                answerBox +=`<option value=""> </option>`
                 options.forEach((option)=>{
-                    answerBox += `<option value="${option}">${option}</option>`
+                    answerBox += `<option ${answerAnswer == option ? 'selected':''} value="${option}">${option}</option>`
                 });
                 answerBox += `</select>`;
             }
 
             let questionForm = `                                
-            <form id="answerForm_${answer.QuestionID}" class="horizontalForm">
+            <form id="${formID}" class="horizontalForm">
                 <input readonly type="text" class="notInput" name="Question" id="answerQuestion_${answer.ID}" placeholder="Question" value="${answer.Question}">
                 ${answerBox}
                 <input type="submit" class="btn btn-primary" value="Save">
@@ -140,7 +152,7 @@ viewClass.prototype.DisplayAnswerForm = function(answers){
             container.innerHTML = questionForm;
             this.AnswerList.AppendChild(container);
     
-            let questionFormBind = new FormBinding(answer,`answerForm_${answer.QuestionID}`);
+            let questionFormBind = new FormBinding(answer,formID);
 
             questionFormBind.OnSubmit = (model) => {
                 questionFormBind.FormRef.Dirty(false);

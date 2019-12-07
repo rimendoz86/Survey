@@ -6,6 +6,12 @@ use API;
 use Data\Repository;
 class Survey extends API\APIBase{
     function Get(){
+        $user = $this->Sess_Auth->get();
+        if(!isset($user)){
+            $this->AddValidationMessage("You must be logged in to do this.");
+            $this->SendResponse(200);
+        }
+        
         $repository = new Repository\Survey();
         $this->Response->Result = $repository->GetAllSurveys();
     }

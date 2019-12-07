@@ -64,6 +64,17 @@ controllerClass.prototype.LogOut = function(){
 }
 
 controllerClass.prototype.SignUp = function () {
+    let auth = this.Model.Authentication;
+    if(!auth.Password.IsType(RegexType.Password)){
+        alert('Password must contain 6-24 characters, upper and lower case with number and one of @#$%');
+        return;
+    }
+
+    if(!auth.Login.IsType(RegexType.Username)){
+        alert('You username is not long enough');
+        return;
+    }
+    
     Data.Post('User', this.Model.Authentication).then((res) =>{
       if(res.ValidationMessages.length > 0) {
         alert(res.ValidationMessages[0]);
@@ -115,6 +126,12 @@ controllerClass.prototype.GetQuestionBySurveyID = function(){
 }
 
 controllerClass.prototype.AddQuestion = function(){
+    let formIsDirty = this.Model.View.QuestionForms.some(x => x.IsDirty);
+    if(formIsDirty){
+        alert("You have unsaved answers");
+        return;
+    }
+
     let questions = this.Model.SurveyQuestions;
     let newQuestions = new Question();
     let questionOrders = questions.map(x => x.QuestionOrder);
@@ -149,13 +166,13 @@ controllerClass.prototype.StartSurvey = function(surveyIndex){
         this.Model.SurveyAnswers = res.Result;
         GlobalViewRef.DisplayAnswerForm(this.Model.SurveyAnswers);
         GlobalViewRef.AnswerContainer.Show(true);
+        this.GetUserSurveys();
+
     });
 }
 
 controllerClass.prototype.UpdateAnswer = function(answer){
-    Data.Post('SurveyUserAnswer',answer).then((res)=>{
-        console.log(res);
-    });
+    Data.Post('SurveyUserAnswer',answer).then((res)=>{});
 }
 
 controllerClass.prototype.CompleteSurvey = function(){
@@ -175,5 +192,6 @@ controllerClass.prototype.CompleteSurvey = function(){
 
     Data.Put('SurveyUserAnswer',selectedSurvey).then((res)=>{
         GlobalViewRef.AnswerContainer.Show(false);
+        this.GetUserSurveys();
     });
 }

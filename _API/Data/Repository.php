@@ -180,11 +180,10 @@ class SurveyUserAnswer extends Data\Connection{
     function SelectUserAnswers($surveyID, $surveyUserID){
         $sql = "SELECT eSQ.SurveyID as SurveyID, eSQ.ID as QuestionID, eSQ.Question, eSQ.Options, xSU.ID as SurveyUserID, xSUA.ID as SurveyUserAnswerID, xSUA.Answer
         FROM entitysurveyquestion as eSQ
-        LEFT JOIN xrefsurveyuseranswer as xSUA ON (eSQ.ID = xSUA.QuestionID) AND xSUA.IsActive
         LEFT JOIN xrefsurveyuser as xSU ON (xSU.SurveyID = eSQ.SurveyID)
+        LEFT JOIN xrefsurveyuseranswer as xSUA ON (xSUA.QuestionID = eSQ.ID) AND (xSUA.SurveyUserID = xSU.ID)
         WHERE eSQ.IsActive AND eSQ.SurveyID = $surveyID and xSU.ID = $surveyUserID
         ORDER BY eSQ.QuestionOrder ASC, eSQ.ID;";
-
         return $this->dbSelect($sql);
     }
 
