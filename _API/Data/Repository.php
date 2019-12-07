@@ -19,20 +19,19 @@ class Survey extends Data\Connection{
     function GetAllSurveys(){
         $sql = "
         SELECT eS.ID, eS.Name, eS.Description, CreatedOn, IsActive  
-        FROM entitysurvey as eS
+        FROM entitySurvey as eS
         WHERE eS.IsActive = 1;";
         return $this->dbSelect($sql);
     }
 
     function GetUserSurveys($id){
-        $sql = "
-        SELECT eS.CreatedOn, eU.Login, eS.Name, eS.Description, eU.Login, eS.ID as SurveyID, eU.UserID as UserID, xSU.ID as SurveyUserID, xSU.IsComplete
-        FROM entitysurvey as eS
-        LEFT JOIN xrefsurveyuser as xSU ON (eS.ID = xSU.SurveyID)
+        $sql = "SELECT eS.CreatedOn, eU.Login, eS.Name, eS.Description, eU.Login, eS.ID as SurveyID, eU.UserID as UserID, xSU.ID as SurveyUserID, xSU.IsComplete
+        FROM entitySurvey as eS
+        LEFT JOIN xrefSurveyUser as xSU ON (eS.ID = xSU.SurveyID)
         AND (xSU.UserID = $id)
-        LEFT JOIN entityuser as eU ON (eU.UserID = xSU.UserID)
-                               
-        WHERE eS.IsActive = 1";
+        LEFT JOIN entityUser as eU ON (eU.UserID = xSU.UserID)
+                       
+        WHERE eS.IsActive = 1;";
 
         
         return $this->dbSelect($sql);
@@ -116,7 +115,7 @@ class SurveyQuestion extends Data\Connection{
     function SelectBySurveyID($req){
         $sql = "
         SELECT eSQ.ID, eSQ.SurveyID, eSQ.QuestionOrder, eSQ.Question, eSQ.Options, eSQ.IsActive  
-        FROM entitysurveyquestion as eSQ 
+        FROM entitySurveyQuestion as eSQ 
         WHERE eSQ.SurveyID = $req->SurveyID AND eSQ.IsActive 
         ORDER BY eSQ.QuestionOrder ASC, eSQ.ID;
         ";
@@ -125,7 +124,7 @@ class SurveyQuestion extends Data\Connection{
 
     function Insert($req){
         $isActive = (int) $req->IsActive; 
-        $sql = "INSERT INTO entitysurveyquestion
+        $sql = "INSERT INTO entitySurveyQuestion
         (SurveyID, QuestionOrder, Question, Options, IsActive)  
         VALUES
         ($req->SurveyID, $req->QuestionOrder,'$req->Question','$req->Options', $isActive);
@@ -134,7 +133,7 @@ class SurveyQuestion extends Data\Connection{
     }
 
     function Update($req){
-        $sql = "UPDATE entitysurveyquestion SET
+        $sql = "UPDATE entitySurveyQuestion SET
         SurveyID = $req->SurveyID,
         QuestionOrder = $req->QuestionOrder,
         Question = '$req->Question',
@@ -146,7 +145,7 @@ class SurveyQuestion extends Data\Connection{
     }
 
     function Delete($req){
-        $sql = "UPDATE entitysurveyquestion SET
+        $sql = "UPDATE entitySurveyQuestion SET
         IsActive = 0
         WHERE ID = $req;
         ";
@@ -179,9 +178,9 @@ class SurveyUserAnswer extends Data\Connection{
 
     function SelectUserAnswers($surveyID, $surveyUserID){
         $sql = "SELECT eSQ.SurveyID as SurveyID, eSQ.ID as QuestionID, eSQ.Question, eSQ.Options, xSU.ID as SurveyUserID, xSUA.ID as SurveyUserAnswerID, xSUA.Answer
-        FROM entitysurveyquestion as eSQ
-        LEFT JOIN xrefsurveyuser as xSU ON (xSU.SurveyID = eSQ.SurveyID)
-        LEFT JOIN xrefsurveyuseranswer as xSUA ON (xSUA.QuestionID = eSQ.ID) AND (xSUA.SurveyUserID = xSU.ID)
+        FROM entitySurveyQuestion as eSQ
+        LEFT JOIN xrefSurveyUser as xSU ON (xSU.SurveyID = eSQ.SurveyID)
+        LEFT JOIN xrefSurveyUserAnswer as xSUA ON (xSUA.QuestionID = eSQ.ID) AND (xSUA.SurveyUserID = xSU.ID)
         WHERE eSQ.IsActive AND eSQ.SurveyID = $surveyID and xSU.ID = $surveyUserID
         ORDER BY eSQ.QuestionOrder ASC, eSQ.ID;";
         return $this->dbSelect($sql);
@@ -208,10 +207,11 @@ class SurveyUserAnswer extends Data\Connection{
     }
 
     function Finish($surveyUserID){
+        $id = (int) $surveyUserID;
         $sql = "
         UPDATE xrefSurveyUser SET
         IsComplete = 1
-        WHERE ID = $surveyUserID";
+        WHERE ID = $id";
         $this->dbUpdate($sql);
 
         return $surveyUserID;
