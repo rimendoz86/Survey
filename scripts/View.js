@@ -7,6 +7,9 @@ function viewClass() {
     this.Pages = this.PageConfig();
     this.QuestionList = new DomRef('questionList');
     this.QuestionForms = [];
+    this.AnswerList = new DomRef('answerSurvey');
+    this.AnswerForms = []
+    this.AnswerContainer = new DomRef('answerContainer');
 };
 
 viewClass.prototype.PageConfig = function(){
@@ -31,15 +34,22 @@ viewClass.prototype.PageConfig = function(){
 };
 
 viewClass.prototype.DisplaySurveys = function (surveys) {
-    let tableContent = `<thead><tr><th>Name</th><th>Description</th><th>CreatedOn</th><th></th></tr></thead>
+    let tableContent = `<thead><tr><th>Description</th><th>CreatedOn</th><th>Started</th><th>Status</th></tr></thead>
                         <tbody>`;
-    surveys.forEach(survey => {
+
+    surveys.forEach((survey, i) => {
+        let actionButton = `<span>Completed</span>`
+        let started = survey.Login ? true : false;
+        if (!survey.IsComplete){
+            actionButton = `<span class="btn btn-primary" onclick="GlobalControllerRef.StartSurvey(${i})">${started ? "Continue" : "Start"}</span>`
+        }
+
         tableContent += `
         <tr>
-            <td>${survey.Login}</td>
             <td>${survey.Name}</td>
             <td>${survey.Description}</td>
-            <td><span class="btn btn-primary">Start</span></td>
+            <td>${started ? 'Yes' : "No"}</td>
+            <td>${actionButton}</td>
         </tr>
         `
     });
@@ -75,10 +85,10 @@ viewClass.prototype.DisplayQuestionForms = function (questions){
         questions.forEach((question, index) => {
             let questionForm = `                                
             <form id="questionForm_${question.ID}" class="horizontalForm">
-                <input type="number" name="QuestionOrder" id="questionOrder_${question.ID}" placeholder="Question Order" value="${question.QuestionOrder}">
+                <input type="number" style="width: 10%;" name="QuestionOrder" id="questionOrder_${question.ID}" placeholder="Question Order" value="${question.QuestionOrder}">
                 <input type="text" name="Question" id="questionQuestion_${question.ID}" placeholder="Question" value="${question.Question}">
                 <input type="text" name="Options" id="questionOptions_${question.ID}" value="${question.Options}"
-                    placeHolder="Options: Blank for text (Yes,No,Maybe) for options">
+                    placeHolder="Options: Blank for Text CSV for Options">
                 <input type="button" class="btn btn-alert" value="Remove" onclick="GlobalControllerRef.DeleteQuestion(${question.ID})">
                 <input type="submit" class="btn btn-primary" value="Save">
             </form>`;
@@ -95,5 +105,50 @@ viewClass.prototype.DisplayQuestionForms = function (questions){
                 questionFormBind.FormRef.Dirty(true);
             }
             this.QuestionForms.push(questionFormBind);
+        });
+}
+
+viewClass.prototype.DisplayAnswerForm = function(answers){
+    if (!answers || answers.length == 0) {
+        this.AnswerList.SetInnerHTML("This survey is not yet ready");
+        return;
+    }
+    this.AnswerList.SetInnerHTML("");
+
+        answers.forEach((answer, index) => {
+            let answerAnswer = answer.Answer ? answer.Answer : '';
+            let answerBox = `<input type="text" name="Answer" id="answerAnswer_${answer.ID}" placeholder="Answer" value="${answerAnswer}">`
+
+            if (answer.Options){
+                let options = answer.Options.split(',');
+                answerBox = `<select name="Answer" id="answerAnswer_${answer.ID}" placeholder="Answer" value="${answerAnswer}">`
+                options.forEach((option)=>{
+                    answerBox += `<option value="${option}">${option}</option>`
+                });
+                answerBox += `</select>`;
+            }
+
+            let questionForm = `                                
+            <form id="answerForm_${answer.QuestionID}" class="horizontalForm">
+                <input readonly type="text" class="notInput" name="Question" id="answerQuestion_${answer.ID}" placeholder="Question" value="${answer.Question}">
+                ${answerBox}
+                <input type="submit" class="btn btn-primary" value="Save">
+            </form>`;
+
+
+            let container = document.createElement("div");
+            container.innerHTML = questionForm;
+            this.AnswerList.AppendChild(container);
+    
+            let questionFormBind = new FormBinding(answer,`answerForm_${answer.QuestionID}`);
+
+            questionFormBind.OnSubmit = (model) => {
+                questionFormBind.FormRef.Dirty(false);
+                GlobalControllerRef.UpdateAnswer(model);
+            };
+            questionFormBind.OnChange = () => { 
+                questionFormBind.FormRef.Dirty(true);
+            }
+            this.AnswerForms.push(questionFormBind);
         });
 }

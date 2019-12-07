@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS xrefSurveyUserAnswer;
 CREATE TABLE xrefSurveyUserAnswer ( 
     ID INT NOT NULL AUTO_INCREMENT,
-    SurveyID INT NOT NULL,
+    QuestionID INT NOT NULL,
     SurveyUserID INT NOT NULL,
     Answer VARCHAR(50) NOT NULL,
     CreatedOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -11,6 +11,6 @@ CREATE TABLE xrefSurveyUserAnswer (
     );
 
 INSERT INTO xrefSurveyUserAnswer 
-(SurveyID, SurveyUserID, Answer)
+(QuestionID, SurveyUserID, Answer)
 VALUES
 (1,1,"Ricardo Mendoza");

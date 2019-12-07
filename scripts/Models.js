@@ -5,6 +5,8 @@ function Survey() {
     this.IsActive = 1;
     this.CreatedOn = null;
     this.UpdatedOn = null;
+    this.SurveyUserID = null;
+    this.IsComplete = null;
 }
 
 function Question(){
@@ -16,6 +18,16 @@ function Question(){
     this.CreatedOn = null;
     this.UpdatedOn = null;
     this.IsActive = 1;
+}
+
+function Answer(){
+    this.Answer = null;
+    this.Options = null;
+    this.Question = null;
+    this.QuestionID = null;
+    this.SurveyID = null;
+    this.SurveyUserAnswerID = null;
+    this.SurveyUserID = null;
 }
 
 function Authentication() {
@@ -166,9 +178,12 @@ var Data = {
                 let res = event.currentTarget;
                 if(res.readyState == 4 && res.status == 200){
                     try{
-                        resolve(JSON.parse(res.responseText));
+                        let response = JSON.parse(res.responseText);
+                        let responseModel = new ResponseModel(response.Result, response.ValidationMessages)
+                        resolve(responseModel);
                     }catch(err){
                         console.log(res.responseText);
+                        console.log(err);
                         reject(err);
                     }
                 }else if (res.readyState == 4 && res.status != 200){
@@ -178,6 +193,17 @@ var Data = {
             req.send();
         })
         return promise;
+    }
+}
+
+function ResponseModel(result, validationMessages){
+    this.Result = result;
+    this.ValidationMessages = validationMessages;
+    this.IsValid = function(){
+        let isValid = false;
+        if (!this.ValidationMessages || this.ValidationMessages.length == 0)
+        isValid = true;
+        return isValid;
     }
 }
 

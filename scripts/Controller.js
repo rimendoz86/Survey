@@ -2,6 +2,7 @@ function controllerClass (){
     this.Model = new modelClass();
     window.GlobalControllerRef = this;
     this.RegisterForms();
+    this.SessionLogin();
 }
 
 controllerClass.prototype.ShowPage = function (pageID){
@@ -30,22 +31,36 @@ controllerClass.prototype.Login = function(){
             return;
         }
         let loginModel = res.Result[0];
-        Object.assign(this.Model.Authentication, loginModel);
 
-        this.LoginForm.ModelToForm(); 
-        GlobalViewRef.LoginForm.Show(false);  
-        GlobalViewRef.LoggedIn.SetInnerHTML(`
-        <span>Welcome, ${loginModel.Login}</span>
-        <span class="btn btn-light" onclick="GlobalControllerRef.LogOut()">Log Out</span>`);
-        this.ShowPage('surveyPage');
+        this.LoginSuccess(loginModel);
     });
+}
+
+controllerClass.prototype.SessionLogin = function (){
+    Data.Get('Login').then((res)=>{
+        let loginModel = res.Result;
+        if(res.IsValid()){
+            this.LoginSuccess(loginModel);
+        }
+    });
+}
+
+controllerClass.prototype.LoginSuccess = function(loginModel){
+    Object.assign(this.Model.Authentication, loginModel);
+    this.LoginForm.ModelToForm(); 
+    GlobalViewRef.LoginForm.Show(false);  
+    GlobalViewRef.LoggedIn.SetInnerHTML(`
+    <span>Welcome, ${loginModel.Login}</span>
+    <span class="btn btn-light" onclick="GlobalControllerRef.LogOut()">Log Out</span>`);
+    this.ShowPage('surveyPage');
 }
 
 controllerClass.prototype.LogOut = function(){
     this.Model.Authentication.UserID = null;
     GlobalViewRef.LoggedIn.SetInnerHTML('');  
     GlobalViewRef.LoginForm.Show(true);  
-    this.LoginForm.ModelToForm(this.Model.Authentication, 'loginForm'); 
+    this.LoginForm.ModelToForm(this.Model.Authentication, 'loginForm');
+    Data.Delete('Login','Logout');
 }
 
 controllerClass.prototype.SignUp = function () {
@@ -68,6 +83,7 @@ controllerClass.prototype.GetAllSurveys = function(){
 
 controllerClass.prototype.GetUserSurveys = function(){
     Data.Get('Survey','*').then((res) => {
+        this.Model.UserSurveys = res.Result;
         GlobalViewRef.DisplaySurveys(res.Result);
     });
 }
@@ -119,7 +135,45 @@ controllerClass.prototype.DeleteQuestion = function(id){
 }
 
 controllerClass.prototype.UpdateQuestion = function(question){
-    Data.Put('SurveyQuestion', question).then((res)=>{
+    Data.Put('SurveyQuestion', question).then((res)=>{});
+}
 
+controllerClass.prototype.StartSurvey = function(surveyIndex){
+    let selectedSurvey = this.Model.UserSurveys[surveyIndex];
+    this.Model.SelectedSurvey = selectedSurvey;
+    let userID = selectedSurvey.UserID ? selectedSurvey.UserID : ''
+    let surveyID = selectedSurvey.SurveyID ? selectedSurvey.SurveyID : ''
+    let surveyUserID = selectedSurvey.SurveyUserID ? selectedSurvey.SurveyUserID : ''
+
+    Data.Get('SurveyUserAnswer',`UserID=${userID}&SurveyID=${surveyID}&SurveyUserID=${surveyUserID}`).then((res)=>{
+        this.Model.SurveyAnswers = res.Result;
+        GlobalViewRef.DisplayAnswerForm(this.Model.SurveyAnswers);
+        GlobalViewRef.AnswerContainer.Show(true);
+    });
+}
+
+controllerClass.prototype.UpdateAnswer = function(answer){
+    Data.Post('SurveyUserAnswer',answer).then((res)=>{
+        console.log(res);
+    });
+}
+
+controllerClass.prototype.CompleteSurvey = function(){
+    let selectedSurvey = this.Model.SelectedSurvey;
+
+    let isComplete = this.Model.SurveyAnswers.every( x=> x.Answer);
+    if(!isComplete){
+        alert("Please answer all the questions");
+        return;
+    }
+
+    let formIsDirty = this.Model.View.AnswerForms.some(x => x.IsDirty);
+    if(formIsDirty){
+        alert("You have unsaved answers");
+        return;
+    }
+
+    Data.Put('SurveyUserAnswer',selectedSurvey).then((res)=>{
+        GlobalViewRef.AnswerContainer.Show(false);
     });
 }
