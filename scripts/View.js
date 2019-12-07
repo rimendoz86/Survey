@@ -23,7 +23,7 @@ viewClass.prototype.PageConfig = function(){
         if(ModelRef.Authentication.UserID){
             GlobalControllerRef.GetUserSurveys();
         }else{
-        GlobalControllerRef.ShowPage('welcomePage')
+            GlobalControllerRef.ShowPage('welcomePage')
         }
 
     }
@@ -34,7 +34,8 @@ viewClass.prototype.PageConfig = function(){
         if(ModelRef.Authentication.IsAdmin){
         GlobalControllerRef.GetAllSurveys();
         }else{
-            GlobalControllerRef.ShowPage('welcomePage')
+            alert("You must be admin for this screen");
+            GlobalControllerRef.ShowPage('welcomePage');
         }
     }
     pages.push(createSurveyPage);
